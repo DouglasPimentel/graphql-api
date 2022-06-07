@@ -3,7 +3,8 @@ import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import { graphqlHTTP } from 'koa-graphql';
 import koaPlayground from 'graphql-playground-middleware-koa';
-import { schema } from './schema';
+import { schema } from './graphql/schema';
+import { root } from './graphql/root';
 
 const app: Koa = new Koa();
 const router: Router = new Router();
@@ -18,7 +19,10 @@ router.get('/', (ctx: Koa.ParameterizedContext) => {
   };
 });
 
-router.all('/graphql', graphqlHTTP({ schema, graphiql: true }));
+router.all(
+  '/graphql',
+  graphqlHTTP({ schema, rootValue: root, graphiql: true }),
+);
 router.all('/playground', koaPlayground({ endpoint: '/graphql' }));
 
 export default app;
