@@ -8,7 +8,8 @@
   "scripts": {
     "build": "esbuild ./src/server.ts --bundle --platform=node --outdir=dist",
     "es": "node -r esbuild-register",
-    "start": "yarn es ./src/server.ts",
+    "start": "node ./dist/server.js",
+    "dev": "yarn es ./src/server.ts",
     "test": "jest",
     "lint": "eslint . --ext .ts",
     "lint:fix": "eslint . --ext .ts --fix",

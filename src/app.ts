@@ -4,10 +4,17 @@ import bodyParser from 'koa-bodyparser';
 import { graphqlHTTP } from 'koa-graphql';
 import koaPlayground from 'graphql-playground-middleware-koa';
 import { schema } from './graphql/schema';
-import { root } from './graphql/root';
+import { resolvers } from './graphql/resolvers';
+import startDatabase from './ database';
 
 const app: Koa = new Koa();
 const router: Router = new Router();
+
+const context = async () => {
+  const db = await startDatabase();
+
+  return { db };
+};
 
 app.use(bodyParser());
 app.use(router.routes()).use(router.allowedMethods());
@@ -21,7 +28,7 @@ router.get('/', (ctx: Koa.ParameterizedContext) => {
 
 router.all(
   '/graphql',
-  graphqlHTTP({ schema, rootValue: root, graphiql: true }),
+  graphqlHTTP({ schema, rootValue: resolvers, context, graphiql: true }),
 );
 router.all('/playground', koaPlayground({ endpoint: '/graphql' }));
 
